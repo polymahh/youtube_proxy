@@ -1,0 +1,9 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "X-Requested-With, Content-Type, Accept"
+    # Using ALLOWALL which is more standard for Netlify, though ALLOW-FROM might also work
+    X-Frame-Options = "ALLOWALL"
+    Content-Security-Policy = "frame-ancestors *" 
