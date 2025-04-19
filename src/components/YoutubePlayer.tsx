@@ -29,7 +29,7 @@ export function YoutubePlayer({ videoId, width = "100%", height = "360" }: Youtu
 
     return (
         <div className="youtube-player-container">
-            <YouTube videoId={videoId} opts={opts} onReady={onReady} />
+            <YouTube videoId={videoId} opts={opts} onReady={onReady} iframeClassName="youtube-iframe" />
             <div className="controls">
                 <button onClick={() => player?.pauseVideo()}>Pause</button>
                 <button onClick={() => player?.playVideo()}>Play</button>
