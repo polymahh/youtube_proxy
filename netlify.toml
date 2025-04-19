@@ -6,4 +6,3 @@
     Access-Control-Allow-Headers = "X-Requested-With, Content-Type, Accept"
     Content-Security-Policy = "frame-ancestors *"
     Cross-Origin-Resource-Policy = "cross-origin"
-    Cross-Origin-Embedder-Policy = "require-corp"
