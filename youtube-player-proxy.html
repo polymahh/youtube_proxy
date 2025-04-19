@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>YouTube Player Proxy</title>
+        <style>
+            body,
+            html {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+            #player {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="player"></div>
+
+        <script>
+            let player;
+            const allowedOrigins = ["http://localhost:3000", "http://localhost:5173", window.location.origin]; // Add your app's origins
+
+            // Load YouTube API
+            const tag = document.createElement("script");
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName("script")[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+            function onYouTubeIframeAPIReady() {
+                // Player is created without initial video
+                player = new YT.Player("player", {
+                    height: "100%",
+                    width: "100%",
+                    playerVars: {
+                        playsinline: 1,
+                        controls: 0, // Hide controls since we'll provide our own
+                        rel: 0,
+                    },
+                    events: {
+                        onReady: onPlayerReady,
+                        onStateChange: onPlayerStateChange,
+                    },
+                });
+            }
+
+            function onPlayerReady(event) {
+                // Tell parent the player is ready
+                sendMessageToParent({ type: "playerReady" });
+            }
+
+            function onPlayerStateChange(event) {
+                // Forward state changes to parent
+                sendMessageToParent({
+                    type: "stateChange",
+                    state: event.data,
+                    currentTime: player.getCurrentTime(),
+                    duration: player.getDuration(),
+                });
+            }
+
+            // Listen for messages from parent
+            window.addEventListener("message", function (event) {
+                // Check origin for security
+                if (!allowedOrigins.includes(event.origin)) return;
+
+                const data = event.data;
+
+                // ❗ Check if player is initialized before doing anything
+                if (!player || typeof player.loadVideoById !== "function") {
+                    console.warn("Player not ready yet!");
+                    return;
+                }
+
+                switch (data.action) {
+                    case "loadVideo":
+                        player.loadVideoById(data.videoId);
+                        break;
+                    case "play":
+                        player.playVideo();
+                        break;
+                    case "pause":
+                        player.pauseVideo();
+                        break;
+                    case "seekTo":
+                        player.seekTo(data.time, true);
+                        break;
+                    case "getDuration":
+                        sendMessageToParent({
+                            type: "durationUpdate",
+                            duration: player.getDuration(),
+                        });
+                        break;
+                    case "getCurrentTime":
+                        sendMessageToParent({
+                            type: "timeUpdate",
+                            currentTime: player.getCurrentTime(),
+                        });
+                        break;
+                }
+            });
+
+            // Helper to communicate with parent
+            function sendMessageToParent(message) {
+                window.parent.postMessage(message, "*");
+            }
+
+            // Send time updates every 100ms when playing
+            setInterval(() => {
+                if (player && player.getPlayerState && player.getPlayerState() === 1) {
+                    sendMessageToParent({
+                        type: "timeUpdate",
+                        currentTime: player.getCurrentTime(),
+                    });
+                }
+            }, 100);
+        </script>
+    </body>
+</html>
