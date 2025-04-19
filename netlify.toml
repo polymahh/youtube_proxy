@@ -4,4 +4,5 @@
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, OPTIONS"
     Access-Control-Allow-Headers = "X-Requested-With, Content-Type, Accept"
-    Content-Security-Policy = "frame-ancestors *" 
+    Content-Security-Policy = "frame-ancestors *"
+    Cross-Origin-Resource-Policy = "cross-origin" 
