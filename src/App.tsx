@@ -264,7 +264,7 @@ function App() {
     return (
         <div style={{ width: "100vw", height: "100vh", overflow: "hidden", background: "#000" }}>
             {/* Div container for the YouTube player */}
-            <div ref={playerContainerRef} credentialless={true} style={{ width: "100%", height: "100%" }}></div>
+            <div ref={playerContainerRef} {...{ credentialless: true }} style={{ width: "100%", height: "100%" }}></div>
 
             {/* Optional: Display status/error overlay for debugging */}
             {error && (
