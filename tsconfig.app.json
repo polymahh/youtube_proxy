@@ -20,7 +20,8 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "noFallthroughCasesInSwitch": false,
-        "noUncheckedSideEffectImports": false
+        "noUncheckedSideEffectImports": false,
+        "noImplicitAny": false
     },
     "include": ["src"]
 }

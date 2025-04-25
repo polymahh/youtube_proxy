@@ -10,13 +10,14 @@ declare global {
 
 function App() {
     const playerRef = useRef<any>(null); // To hold the YT.Player instance
-    const playerContainerRef = useRef<HTMLDivElement>(null); // Ref for the div where player will be inserted
+    const iframeRef = useRef<HTMLIFrameElement>(null); // Using iframe ref instead of div
 
     const [isApiReady, setIsApiReady] = useState(false);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [error, setError] = useState<string | null>(null);
+    const [iframeId] = useState(`youtube-player-${Math.random().toString(36).substring(2, 11)}`); // Unique ID for iframe
 
     // Function to send status updates UP to the parent window
     const sendMessageToParent = useCallback((message: object) => {
@@ -100,31 +101,25 @@ function App() {
 
     // Function to initialize the player once API is ready
     const initializePlayer = useCallback(() => {
-        if (!isApiReady || !playerContainerRef.current || playerRef.current) {
+        if (!isApiReady || !iframeId || playerRef.current) {
             console.log("Player init conditions not met:", {
                 isApiReady,
-                container: !!playerContainerRef.current,
+                iframeId,
                 playerExists: !!playerRef.current,
             });
             return;
         }
-        console.log("Initializing YT Player in container:", playerContainerRef.current);
+        console.log("Initializing YT Player using existing iframe:", iframeId);
         try {
-            playerRef.current = new window.YT.Player(playerContainerRef.current, {
-                height: "100%",
-                width: "100%",
-                videoId: "", // Start blank, wait for loadVideo command
-                playerVars: {
-                    playsinline: 1,
-                    controls: 0, // Controls managed by parent
-                    rel: 0,
-                    origin: window.location.origin, // Important for security
-                },
+            // Use the existing iframe instead of creating a new one
+            playerRef.current = new window.YT.Player(iframeId, {
                 events: {
                     onReady: onPlayerReady,
                     onStateChange: onPlayerStateChange,
                     onError: onPlayerError,
                 },
+                // We don't need to specify height, width, videoId, or playerVars
+                // since they're already set on the iframe element
             });
             console.log("YT Player instance created:", playerRef.current);
         } catch (e: any) {
@@ -136,7 +131,7 @@ function App() {
                 message: e.message || "Unknown initialization error",
             });
         }
-    }, [isApiReady, onPlayerReady, onPlayerStateChange, onPlayerError, sendMessageToParent]);
+    }, [isApiReady, iframeId, onPlayerReady, onPlayerStateChange, onPlayerError, sendMessageToParent]);
 
     // Effect to load the YouTube IFrame API
     useEffect(() => {
@@ -171,7 +166,10 @@ function App() {
     // Effect to initialize player once API is ready
     useEffect(() => {
         if (isApiReady) {
-            initializePlayer();
+            // Give time for the iframe to be available in the DOM
+            setTimeout(() => {
+                initializePlayer();
+            }, 100);
         }
     }, [isApiReady, initializePlayer]); // Run when API becomes ready
 
@@ -263,8 +261,21 @@ function App() {
 
     return (
         <div style={{ width: "100vw", height: "100vh", overflow: "hidden", background: "#000" }}>
-            {/* Div container for the YouTube player */}
-            <div ref={playerContainerRef} {...{ credentialless: true }} style={{ width: "100%", height: "100%" }}></div>
+            {/* Using a real iframe instead of a div for YouTube to use */}
+            <iframe
+                id={iframeId}
+                ref={iframeRef}
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/?enablejsapi=1&origin=${window.location.origin}&controls=0&rel=0&playsinline=1`}
+                title="YouTube Player"
+                frameBorder="0"
+                data-credentialless="true"
+                {...({ credentialless: true } as any)}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ border: "none", width: "100%", height: "100%" }}
+            ></iframe>
 
             {/* Optional: Display status/error overlay for debugging */}
             {error && (
