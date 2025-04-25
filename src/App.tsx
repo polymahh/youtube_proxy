@@ -276,6 +276,13 @@ function App() {
                 allowFullScreen
                 style={{ border: "none", width: "100%", height: "100%" }}
             ></iframe>
+            {/* 
+            <iframe
+                credentialless
+                src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+            ></iframe> */}
 
             {/* Optional: Display status/error overlay for debugging */}
             {error && (
@@ -293,25 +300,6 @@ function App() {
                     }}
                 >
                     Player Error: {error}
-                </div>
-            )}
-            {!isPlayerReady && !error && (
-                <div
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        background: "rgba(0,0,0,0.5)",
-                        color: "white",
-                        zIndex: 99,
-                    }}
-                >
-                    Loading Player... (API Ready: {isApiReady ? "Yes" : "No"})
                 </div>
             )}
         </div>
