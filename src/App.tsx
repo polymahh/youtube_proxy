@@ -278,7 +278,9 @@ function App() {
             ></iframe> */}
 
             <iframe
-                credentialless
+                // credentialless
+                data-credentialless="true"
+                {...({ credentialless: true } as any)}
                 width="100%"
                 height="100%"
                 src="https://www.youtube.com/embed/${videoId}?autoplay=1"
