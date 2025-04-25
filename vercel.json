@@ -10,7 +10,8 @@
                     "key": "Cross-Origin-Embedder-Policy",
                     "value": "credentialless"
                 }
-            ]
+            ],
+            "rewrites": [{ "source": "/(.*)", "destination": "/" }]
         }
     ]
 }
