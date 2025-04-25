@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-
+import "./index.css";
 // Declare YT types globally or import if using a library like @types/youtube
 declare global {
     interface Window {
@@ -260,7 +260,7 @@ function App() {
     }, [isPlayerReady, sendMessageToParent]); // Depend on isPlayerReady to ensure playerRef.current methods exist
 
     return (
-        <div style={{ width: "100vw", height: "100vh", overflow: "hidden", background: "#000" }}>
+        <div>
             {/* Using a real iframe instead of a div for YouTube to use */}
             <iframe
                 id={iframeId}
