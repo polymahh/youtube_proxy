@@ -283,7 +283,7 @@ function App() {
                 {...({ credentialless: true } as any)}
                 width="100%"
                 height="100%"
-                src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+                src="https://www.youtube.com/embed/ovtz7__1UrI"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
                 style={{ border: "none", width: "100%", height: "100%" }}
