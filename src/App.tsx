@@ -1,5 +1,4 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import "./index.css";
 // Declare YT types globally or import if using a library like @types/youtube
 declare global {
     interface Window {
