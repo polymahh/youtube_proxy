@@ -261,7 +261,7 @@ function App() {
     return (
         <div>
             {/* Using a real iframe instead of a div for YouTube to use */}
-            {/* <iframe
+            <iframe
                 id={iframeId}
                 ref={iframeRef}
                 width="100%"
@@ -273,18 +273,6 @@ function App() {
                 {...({ credentialless: true } as any)}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                style={{ border: "none", width: "100%", height: "100%" }}
-            ></iframe> */}
-
-            <iframe
-                // credentialless
-                data-credentialless="true"
-                {...({ credentialless: true } as any)}
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/ovtz7__1UrI"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
                 style={{ border: "none", width: "100%", height: "100%" }}
             ></iframe>
 
